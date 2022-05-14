@@ -7,16 +7,35 @@
 
 import SwiftUI
 
+enum TypeBoard {
+    case easy
+    case medium
+    case hard
+}
+
+struct Board {
+    var columns: Int
+    var rows: Int
+}
+
 struct ContentView: View {
-    @State private var moves: [String] = Array(repeating: "", count: 16)
+    @State private var moves: [String] = Array(repeating: "", count: 9)
+    @State private var difficulty: TypeBoard = .easy
     
     var body: some View {
+        NavigationView {
         VStack {
+            Picker("Choose difficulty", selection: $difficulty) {
+                Text("Easy").tag(TypeBoard.easy)
+                Text("Medium").tag(TypeBoard.medium)
+                Text("Hard").tag(TypeBoard.hard)
+            }.pickerStyle(.segmented)
+            
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 15), count: 4), spacing: 15) {
-                ForEach(0..<16, id: \.self) { index in
+                ForEach(0..<moves.count, id: \.self) { index in
                     ZStack {
                         Color.blue
-                        Color.black
+                        Color.red
                             .opacity(moves[index] == "" ? 1 : 0)
                         Image("simpsons_bart1")
                             .resizable()
@@ -39,7 +58,9 @@ struct ContentView: View {
                     })
                 }
             }
-            .padding(15)
+        }
+        .padding(15)
+        .navigationTitle("Simpsons Memo")
         }
     }
     
