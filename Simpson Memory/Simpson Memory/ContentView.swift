@@ -18,10 +18,36 @@ struct Board {
     var rows: Int
 }
 
+let imgsName = [
+    "apu",
+    "barney",
+    "bart1",
+    "bart2",
+    "bart3",
+    "bob",
+    "burns",
+    "comics",
+    "family",
+    "homero1",
+    "jefe_gorgory",
+    "krusty",
+    "lisa",
+    "maggie",
+    "marge1",
+    "martin",
+    "milhouse",
+    "moe",
+    "nelson",
+    "skinner",
+    "smithers"
+]
+
 struct ContentView: View {
     @State private var currentBoardConfig: Board = Board(columns: 4, rows: 4)
-    @State private var moves: [String] = Array(repeating: "", count: 16)
-    @State private var difficulty: TypeBoard = .easy
+    @State private var faces: [String] = []
+    @State private var moves: [String] = Array(repeating: "", count: 0)
+    @State private var difficulty: TypeBoard = .hard
+    @State private var currentMoves = 0
     
     var body: some View {
         NavigationView {
@@ -54,12 +80,12 @@ struct ContentView: View {
                                 Color.blue
                                 ZStack {
                                     Color.gray.opacity(0.5)
-                                    Image("simpsons_smithers")
+                                    Image("simpsons_logo")
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                 }
                                     .opacity(moves[index] == "" ? 1 : 0)
-                                Image("simpsons_bart1")
+                                Image("simpsons_\(faces[index])")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
                                     .opacity(moves[index] != "" ? 1 : 0)
@@ -77,7 +103,8 @@ struct ContentView: View {
                             .onTapGesture(perform: {
                                 withAnimation(Animation.easeIn(duration: 0.5)) {
                                     if moves[index] == "" {
-                                        moves[index] = "X"
+                                        currentMoves += 1
+                                        moves[index] = "\(faces[index])"
                                     } else {
                                         moves[index] = ""
                                     }
@@ -90,6 +117,8 @@ struct ContentView: View {
                 .padding(15)
                 .navigationTitle("Simpsons Memo")
                 .navigationBarHidden(true)
+            }.onAppear {
+                initBorad()
             }
         }
     }
@@ -106,18 +135,40 @@ struct ContentView: View {
         return calculatedHeight < 0 ? 129.25 : calculatedHeight
     }
     
+    func initBorad() {
+        changeBoard()
+    }
+    
     func changeBoard() {
         switch difficulty {
         case .easy:
             currentBoardConfig = Board(columns: 4, rows: 4)
             moves = Array(repeating: "", count: 16)
+            randomBoard()
         case .medium:
             currentBoardConfig = Board(columns: 4, rows: 6)
             moves = Array(repeating: "", count: 24)
+            randomBoard()
         case .hard:
             currentBoardConfig = Board(columns: 5, rows: 6)
             moves = Array(repeating: "", count: 30)
+            randomBoard()
         }
+    }
+    
+    func randomBoard() {
+        var possibleItems = imgsName.shuffled()
+        var possibleFaces: [String] = []
+        for _ in 0..<(moves.count/2) {
+            let randomIndex = (0..<possibleItems.count).randomElement()!
+            print(possibleItems[randomIndex])
+            possibleFaces.append(possibleItems[randomIndex])
+            possibleFaces.append(possibleItems[randomIndex])
+            possibleItems.remove(at: randomIndex)
+        }
+        print("=====")
+        possibleFaces.shuffle()
+        self.faces = possibleFaces
     }
     
 }
