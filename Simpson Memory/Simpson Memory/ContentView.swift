@@ -16,6 +16,18 @@ enum TypeBoard {
 struct Board {
     var columns: Int
     var rows: Int
+    var total: Int
+    
+    init(columns: Int, rows: Int) {
+        self.columns = columns
+        self.rows = rows
+        self.total = rows * columns
+    }
+}
+
+struct Move {
+    let cardName: String
+    let boardIndex: Int
 }
 
 let imgsName = [
@@ -44,10 +56,13 @@ let imgsName = [
 
 struct ContentView: View {
     @State private var currentBoardConfig: Board = Board(columns: 4, rows: 4)
-    @State private var faces: [String] = []
-    @State private var moves: [String] = Array(repeating: "", count: 0)
+    @State private var faces: [String] = Array(repeating: "", count: 16)
+    @State private var moves: [Move?] = Array(repeating: nil, count: 16)
     @State private var difficulty: TypeBoard = .hard
     @State private var currentMoves = 0
+    @State private var prevMove: Move? = nil
+    @State private var isBoardDisable = false
+    @State private var points: Int = 0
     
     var body: some View {
         NavigationView {
@@ -63,7 +78,7 @@ struct ContentView: View {
                         HStack {
                             Image(systemName: "star.fill")
                                 .foregroundColor(.yellow)
-                            Text("1")
+                            Text("\(points)")
                         }
                     }
                     Picker("Choose difficulty", selection: $difficulty) {
@@ -75,25 +90,27 @@ struct ContentView: View {
                     }
                     
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 15), count: currentBoardConfig.columns), spacing: 15) {
-                        ForEach(0..<moves.count, id: \.self) { index in
+                        ForEach(0..<currentBoardConfig.total, id: \.self) { index in
                             ZStack {
                                 Color.blue
+                                // CARD LOGO
                                 ZStack {
                                     Color.gray.opacity(0.5)
                                     Image("simpsons_logo")
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                 }
-                                    .opacity(moves[index] == "" ? 1 : 0)
+                                .opacity(moves[index] == nil ? 1 : 0)
+                                // CARDS FACES
                                 Image("simpsons_\(faces[index])")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .opacity(moves[index] != "" ? 1 : 0)
+                                    .opacity(moves[index] != nil ? 1 : 0)
                             }
                             .frame(width: getWidth(), height: getHeight(proxy), alignment: .center)
                             .cornerRadius(15)
                             .rotation3DEffect(
-                                .init(degrees: moves[index] != "" ? 180 : 0),
+                                .init(degrees: moves[index] != nil ? 180 : 0),
                                 axis: (x: 0.0, y: 1.0, z: 0.0),
                                 anchor: .center,
                                 anchorZ: 0.0,
@@ -102,16 +119,12 @@ struct ContentView: View {
                             .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0.0, y: 0.0)
                             .onTapGesture(perform: {
                                 withAnimation(Animation.easeIn(duration: 0.5)) {
-                                    if moves[index] == "" {
-                                        currentMoves += 1
-                                        moves[index] = "\(faces[index])"
-                                    } else {
-                                        moves[index] = ""
-                                    }
+                                    processPlayerMove(for: index)
                                 }
                             })
                         }
                     }
+                    .disabled(isBoardDisable)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 .padding(15)
@@ -119,6 +132,45 @@ struct ContentView: View {
                 .navigationBarHidden(true)
             }.onAppear {
                 initBorad()
+            }
+        }
+    }
+    
+    func isPositionFlipped(in moves: [Move?], forIndex index: Int) -> Bool {
+        return moves.contains(where: {$0?.boardIndex == index })
+    }
+    
+    func processPlayerMove(for position: Int) {
+        if isPositionFlipped(in: moves, forIndex: position) { return }
+        let currentMove = Move(cardName: "\(faces[position])", boardIndex: position)
+        
+        if currentMoves < 1 {
+            prevMove = currentMove
+        }
+        if currentMoves < 2 {
+            currentMoves += 1
+            moves[position] = currentMove
+        }
+        if currentMoves == 2 {
+            isBoardDisable = true
+            guard let prevMove = prevMove else {
+                return
+            }
+            if prevMove.cardName == currentMove.cardName {
+                currentMoves = 0
+                self.prevMove = nil
+                self.points += 1
+                isBoardDisable = false
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
+                    withAnimation(Animation.easeOut(duration: 0.5)) {
+                        moves[position] = nil
+                        moves[prevMove.boardIndex] = nil
+                        currentMoves = 0
+                        self.prevMove = nil
+                        isBoardDisable = false
+                    }
+                }
             }
         }
     }
@@ -143,30 +195,27 @@ struct ContentView: View {
         switch difficulty {
         case .easy:
             currentBoardConfig = Board(columns: 4, rows: 4)
-            moves = Array(repeating: "", count: 16)
-            randomBoard()
         case .medium:
             currentBoardConfig = Board(columns: 4, rows: 6)
-            moves = Array(repeating: "", count: 24)
-            randomBoard()
         case .hard:
             currentBoardConfig = Board(columns: 5, rows: 6)
-            moves = Array(repeating: "", count: 30)
-            randomBoard()
         }
+        randomBoard()
+        moves = Array(repeating: nil, count: currentBoardConfig.total)
+        currentMoves = 0
+        self.points = 0
+        prevMove = nil
     }
     
     func randomBoard() {
         var possibleItems = imgsName.shuffled()
         var possibleFaces: [String] = []
-        for _ in 0..<(moves.count/2) {
+        for _ in 0..<(currentBoardConfig.total/2) {
             let randomIndex = (0..<possibleItems.count).randomElement()!
-            print(possibleItems[randomIndex])
             possibleFaces.append(possibleItems[randomIndex])
             possibleFaces.append(possibleItems[randomIndex])
             possibleItems.remove(at: randomIndex)
         }
-        print("=====")
         possibleFaces.shuffle()
         self.faces = possibleFaces
     }
