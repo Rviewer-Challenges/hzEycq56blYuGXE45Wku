@@ -4,31 +4,15 @@
 //
 //  Created by Jonathan Torres on 03/05/22.
 //
+/** SONIDOS **/
+// START: https://elements.envato.com/es/funny-loop-EHLAHAA
+// WIN: https://elements.envato.com/es/big-band-prize-EBSRPZT
+// CORRECT: https://elements.envato.com/es/simple-win-83ES7TF
+// FAIL: https://elements.envato.com/es/mallet-drum-fail-D96GXMC
+// TOUCH BUTTON: https://elements.envato.com/es/game-button-select-pop-ZY7SBW7
+// FLIP CARD: https://elements.envato.com/es/cardboard-game-card-flip-ESW3UTN
 
 import SwiftUI
-
-enum TypeBoard {
-    case easy
-    case medium
-    case hard
-}
-
-struct Board {
-    var columns: Int
-    var rows: Int
-    var total: Int
-    
-    init(columns: Int, rows: Int) {
-        self.columns = columns
-        self.rows = rows
-        self.total = rows * columns
-    }
-}
-
-struct Move {
-    let cardName: String
-    let boardIndex: Int
-}
 
 let imgsName = [
     "apu",

@@ -11,7 +11,7 @@ import SwiftUI
 struct Simpson_MemoryApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            GameView()
         }
     }
 }
