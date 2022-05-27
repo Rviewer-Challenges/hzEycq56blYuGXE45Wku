@@ -13,19 +13,6 @@ struct GameView: View {
     var body: some View {
         GeometryReader { proxy in
             VStack {
-                HStack {
-                    HStack {
-                        Image(systemName: "heart.fill")
-                            .foregroundColor(.red)
-                        Text("3")
-                    }
-                    Spacer()
-                    HStack {
-                        Image(systemName: "star.fill")
-                            .foregroundColor(.yellow)
-                        Text("\(viewModel.points)")
-                    }
-                }
                 Picker("Choose difficulty", selection: $viewModel.difficulty) {
                     Text("Easy").tag(TypeBoard.easy)
                     Text("Medium").tag(TypeBoard.medium)
@@ -48,8 +35,17 @@ struct GameView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .padding(15)
-            .navigationTitle("Simpsons Memo")
-            .navigationBarHidden(true)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                HStack {
+                    Image(systemName: "star.fill")
+                        .foregroundColor(.yellow)
+                    Text("\(viewModel.points)")
+                }
+            }
+            .alert("You Win!", isPresented: $viewModel.isWinner) {
+                Button("Yujuuuu", role: .cancel) { viewModel.reset() }
+            }
         }.onAppear {
             viewModel.initBorad()
         }
@@ -59,5 +55,6 @@ struct GameView: View {
 struct GameView_Previews: PreviewProvider {
     static var previews: some View {
         GameView()
+            .preferredColorScheme(.dark)
     }
 }

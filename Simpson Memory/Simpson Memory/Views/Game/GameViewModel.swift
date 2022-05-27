@@ -11,28 +11,28 @@ import SwiftUI
 extension GameView {
     class ViewModel: ObservableObject {
         private let imgsName = [
-        "apu",
-        "barney",
-        "bart1",
-        "bart2",
-        "bart3",
-        "bob",
-        "burns",
-        "comics",
-        "family",
-        "homero1",
-        "jefe_gorgory",
-        "krusty",
-        "lisa",
-        "maggie",
-        "marge1",
-        "martin",
-        "milhouse",
-        "moe",
-        "nelson",
-        "skinner",
-        "smithers"
-    ]
+            "apu",
+            "barney",
+            "bart1",
+            "bart2",
+            "bart3",
+            "bob",
+            "burns",
+            "comics",
+            "family",
+            "homero1",
+            "jefe_gorgory",
+            "krusty",
+            "lisa",
+            "maggie",
+            "marge1",
+            "martin",
+            "milhouse",
+            "moe",
+            "nelson",
+            "skinner",
+            "smithers"
+        ]
         
         @Published var currentBoard: Board = Board(columns: 4, rows: 4)
         @Published var faces: [String] = Array(repeating: "", count: 16)
@@ -42,6 +42,7 @@ extension GameView {
         @Published var prevMove: Move? = nil
         @Published var isBoardDisable = false
         @Published var points: Int = 0
+        @Published var isWinner = false
         
         func isPositionFlipped(in moves: [Move?], forIndex index: Int) -> Bool {
             return moves.contains(where: {$0?.boardIndex == index })
@@ -61,13 +62,19 @@ extension GameView {
             if currentMoves == 2 {
                 isBoardDisable = true
                 guard let prevMove = prevMove else {
+                    isBoardDisable = false
                     return
                 }
                 if prevMove.cardName == currentMove.cardName {
                     currentMoves = 0
                     self.prevMove = nil
                     self.points += 1
-                    isBoardDisable = false
+                    if self.checkWinCondition() {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            self.isWinner = true
+                        }
+                    }
+                    self.isBoardDisable = false
                 } else {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
                         withAnimation(Animation.easeOut(duration: 0.5)) {
@@ -80,6 +87,13 @@ extension GameView {
                     }
                 }
             }
+        }
+        
+        func checkWinCondition() -> Bool {
+            if currentBoard.total/2 == points {
+                return true
+            }
+            return false
         }
         
         func initBorad() {
@@ -95,6 +109,10 @@ extension GameView {
             case .hard:
                 currentBoard = Board(columns: 5, rows: 6)
             }
+            reset()
+        }
+        
+        func reset() {
             randomBoard()
             moves = Array(repeating: nil, count: currentBoard.total)
             currentMoves = 0

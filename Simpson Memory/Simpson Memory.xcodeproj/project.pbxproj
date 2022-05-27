@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D11264092840A1C600906739 /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11264082840A1C600906739 /* StartView.swift */; };
+		D112640D2840A86E00906739 /* Simple-Win.wav in Resources */ = {isa = PBXBuildFile; fileRef = D112640C2840A86E00906739 /* Simple-Win.wav */; };
+		D112640F2840A89B00906739 /* Loop.wav in Resources */ = {isa = PBXBuildFile; fileRef = D112640E2840A89B00906739 /* Loop.wav */; };
+		D11264112840A8AD00906739 /* BigWin.wav in Resources */ = {isa = PBXBuildFile; fileRef = D11264102840A8AD00906739 /* BigWin.wav */; };
+		D11264132840A97100906739 /* Simple-Fail.wav in Resources */ = {isa = PBXBuildFile; fileRef = D11264122840A97100906739 /* Simple-Fail.wav */; };
+		D11264152840A98A00906739 /* Card-Flip.wav in Resources */ = {isa = PBXBuildFile; fileRef = D11264142840A98A00906739 /* Card-Flip.wav */; };
+		D11264172840AA1A00906739 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11264162840AA1A00906739 /* Util.swift */; };
+		D11264192840AB9B00906739 /* Select.wav in Resources */ = {isa = PBXBuildFile; fileRef = D11264182840AB9B00906739 /* Select.wav */; };
 		D1781880283759BB007BE0EE /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = D178187F283759BB007BE0EE /* Board.swift */; };
 		D1781882283759E5007BE0EE /* Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1781881283759E5007BE0EE /* Move.swift */; };
 		D178188628375A22007BE0EE /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D178188528375A22007BE0EE /* GameView.swift */; };
@@ -19,6 +27,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D11264082840A1C600906739 /* StartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartView.swift; sourceTree = "<group>"; };
+		D112640C2840A86E00906739 /* Simple-Win.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Simple-Win.wav"; sourceTree = "<group>"; };
+		D112640E2840A89B00906739 /* Loop.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Loop.wav; sourceTree = "<group>"; };
+		D11264102840A8AD00906739 /* BigWin.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = BigWin.wav; sourceTree = "<group>"; };
+		D11264122840A97100906739 /* Simple-Fail.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Simple-Fail.wav"; sourceTree = "<group>"; };
+		D11264142840A98A00906739 /* Card-Flip.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Card-Flip.wav"; sourceTree = "<group>"; };
+		D11264162840AA1A00906739 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		D11264182840AB9B00906739 /* Select.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Select.wav; sourceTree = "<group>"; };
 		D178187F283759BB007BE0EE /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
 		D1781881283759E5007BE0EE /* Move.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Move.swift; sourceTree = "<group>"; };
 		D178188528375A22007BE0EE /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
@@ -42,6 +58,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D112640A2840A85D00906739 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				D112640B2840A86400906739 /* Audio */,
+				D11264162840AA1A00906739 /* Util.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		D112640B2840A86400906739 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				D11264102840A8AD00906739 /* BigWin.wav */,
+				D112640E2840A89B00906739 /* Loop.wav */,
+				D11264182840AB9B00906739 /* Select.wav */,
+				D11264142840A98A00906739 /* Card-Flip.wav */,
+				D11264122840A97100906739 /* Simple-Fail.wav */,
+				D112640C2840A86E00906739 /* Simple-Win.wav */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
 		D178187C28375989007BE0EE /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -72,6 +110,7 @@
 		D178188428375A14007BE0EE /* Start */ = {
 			isa = PBXGroup;
 			children = (
+				D11264082840A1C600906739 /* StartView.swift */,
 			);
 			path = Start;
 			sourceTree = "<group>";
@@ -103,6 +142,7 @@
 		D1A2B9522821FEDC007D7371 /* Simpson Memory */ = {
 			isa = PBXGroup;
 			children = (
+				D112640A2840A85D00906739 /* Support */,
 				D178187E283759A0007BE0EE /* Model */,
 				D178188728375AD3007BE0EE /* CustomViews */,
 				D178187C28375989007BE0EE /* Views */,
@@ -180,7 +220,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D11264152840A98A00906739 /* Card-Flip.wav in Resources */,
+				D112640D2840A86E00906739 /* Simple-Win.wav in Resources */,
 				D1A2B95B2821FEDD007D7371 /* Preview Assets.xcassets in Resources */,
+				D11264132840A97100906739 /* Simple-Fail.wav in Resources */,
+				D11264112840A8AD00906739 /* BigWin.wav in Resources */,
+				D112640F2840A89B00906739 /* Loop.wav in Resources */,
+				D11264192840AB9B00906739 /* Select.wav in Resources */,
 				D1A2B9582821FEDD007D7371 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -193,8 +239,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				D1781882283759E5007BE0EE /* Move.swift in Sources */,
+				D11264172840AA1A00906739 /* Util.swift in Sources */,
 				D1A2B9562821FEDC007D7371 /* ContentView.swift in Sources */,
 				D1A2B9542821FEDC007D7371 /* Simpson_MemoryApp.swift in Sources */,
+				D11264092840A1C600906739 /* StartView.swift in Sources */,
 				D1781880283759BB007BE0EE /* Board.swift in Sources */,
 				D178188928375AED007BE0EE /* BoardItemView.swift in Sources */,
 				D178188628375A22007BE0EE /* GameView.swift in Sources */,
