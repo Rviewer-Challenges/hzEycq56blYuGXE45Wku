@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct StartView: View {
+    @State private var difficulty: TypeBoard = .easy
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -19,8 +21,12 @@ struct StartView: View {
                         .resizable()
                         .scaledToFit()
                     
-                        Spacer()
-                    NavigationLink(destination: GameView(), label: {
+                    Spacer()
+                    VStack {
+                        Text("Choose your difficulty")
+                        DifficultyPicker(difficulty: $difficulty)
+                    }.padding(.bottom, 20)
+                    NavigationLink(destination: GameView(difficulty: difficulty), label: {
                         HStack {
                             Spacer()
                             Text("START")
@@ -32,13 +38,13 @@ struct StartView: View {
                         .background(Color.yellow)
                         .clipShape(Capsule())
                     })
-                        Spacer()
+                    Spacer()
                     Group {
                         Text("Made with ❤️ by Jonathan Torres")
                         Text("torresr.com")
                     }
-                    .font(.system(size: 15, weight: .light))
-                    .foregroundColor(Color.init(uiColor: .systemBackground))
+                    .font(.system(size: 12, weight: .light))
+                    .foregroundColor(Color.init(uiColor: .label))
                 }
                 .padding(.horizontal)
             }

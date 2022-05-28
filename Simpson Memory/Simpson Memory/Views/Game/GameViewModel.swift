@@ -33,16 +33,27 @@ extension GameView {
             "skinner",
             "smithers"
         ]
+        private var totalTime = 60
+        
+        @Published var timer = Timer()
         
         @Published var currentBoard: Board = Board(columns: 4, rows: 4)
         @Published var faces: [String] = Array(repeating: "", count: 16)
         @Published var moves: [Move?] = Array(repeating: nil, count: 16)
-        @Published var difficulty: TypeBoard = .easy
         @Published var currentMoves = 0
+        @Published var totalMoves = 0
         @Published var prevMove: Move? = nil
         @Published var isBoardDisable = false
         @Published var points: Int = 0
         @Published var isWinner = false
+        @Published var timeRemaining: Int = 60
+        @Published var alertItem: AlertItem?
+        
+        let difficulty: TypeBoard
+        
+        init(difficulty: TypeBoard) {
+            self.difficulty = difficulty
+        }
         
         func isPositionFlipped(in moves: [Move?], forIndex index: Int) -> Bool {
             return moves.contains(where: {$0?.boardIndex == index })
@@ -69,6 +80,7 @@ extension GameView {
                     currentMoves = 0
                     self.prevMove = nil
                     self.points += 1
+                    self.totalMoves += 1
                     if self.checkWinCondition() {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                             self.isWinner = true
@@ -83,6 +95,7 @@ extension GameView {
                             self.currentMoves = 0
                             self.prevMove = nil
                             self.isBoardDisable = false
+                            self.totalMoves += 1
                         }
                     }
                 }
@@ -91,6 +104,7 @@ extension GameView {
         
         func checkWinCondition() -> Bool {
             if currentBoard.total/2 == points {
+                alertItem = AlertContext.win
                 return true
             }
             return false
@@ -104,20 +118,25 @@ extension GameView {
             switch difficulty {
             case .easy:
                 currentBoard = Board(columns: 4, rows: 4)
+                totalTime = 60
             case .medium:
                 currentBoard = Board(columns: 4, rows: 6)
+                totalTime = 75
             case .hard:
                 currentBoard = Board(columns: 5, rows: 6)
+                totalTime = 85
             }
             reset()
         }
         
         func reset() {
+            initTimer()
             randomBoard()
             moves = Array(repeating: nil, count: currentBoard.total)
             currentMoves = 0
             self.points = 0
             prevMove = nil
+            totalMoves = 0
         }
         
         func randomBoard() {
@@ -131,6 +150,21 @@ extension GameView {
             }
             possibleFaces.shuffle()
             self.faces = possibleFaces
+        }
+        
+        func initTimer() {
+            timer.invalidate()
+            timeRemaining = totalTime
+            timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTime), userInfo: nil, repeats: true)
+        }
+        
+        @objc func updateTime() {
+            if timeRemaining > 0 {
+                timeRemaining -= 1
+            } else {
+                timer.invalidate()
+                alertItem = AlertContext.lose
+            }
         }
     }
 }

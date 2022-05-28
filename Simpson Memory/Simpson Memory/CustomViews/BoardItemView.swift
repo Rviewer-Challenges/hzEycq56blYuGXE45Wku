@@ -25,10 +25,12 @@ struct BoardItemView: View {
             }
             .opacity(move == nil ? 1 : 0)
             // CARDS FACES
-            Image("simpsons_\(face)")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .opacity(move != nil ? 1 : 0)
+            if move != nil{
+                Image("simpsons_\(face)")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .opacity(move != nil ? 1 : 0)
+            }
         }
         .frame(width: getWidth(), height: getHeight(proxy), alignment: .center)
         .cornerRadius(15)
@@ -49,7 +51,7 @@ struct BoardItemView: View {
     }
     
     private func getHeight(_ proxyReader: GeometryProxy) -> CGFloat {
-        let padding = board.rows == 4 ? 150 : 180
+        let padding = board.rows == 4 ? 120 : 150
         let calculatedHeight = (proxyReader.size.height - CGFloat(padding)) / CGFloat(board.rows)
         return calculatedHeight < 0 ? 129.25 : calculatedHeight
     }
